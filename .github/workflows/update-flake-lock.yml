@@ -5,20 +5,21 @@ on:
     - cron: "0 3 * * 1" # every Monday 03:00 UTC
   workflow_dispatch:
 
-permissions:
-  contents: write
-  pull-requests: write
+permissions: {}
 
 jobs:
   update:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - uses: DeterminateSystems/nix-installer-action@ef8a148080ab6020fd15196c2084a2eea5ff2d25 # v22
 
       - name: Update flake.lock
-        run: nix flake update
+        run: nix flake update --flake .
 
       - name: Create PR if changed
         env:
@@ -35,7 +36,7 @@ jobs:
           git checkout -B "$branch"
           git add flake.lock
           git commit -m "chore: update flake.lock"
-          git push -f origin "$branch"
+          git push --force-with-lease origin "$branch"
 
           # Create PR if one doesn't already exist
           if ! gh pr list --head "$branch" --state open --json number --jq '.[0].number' | grep -q .; then
