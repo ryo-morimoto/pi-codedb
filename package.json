@@ -1,19 +1,30 @@
 {
   "name": "pi-codedb",
   "version": "1.0.0",
-  "type": "module",
   "description": "Code intelligence for pi — structural indexing, trigram search, symbol lookup via codedb REST API. Inspired by Cloudflare Dynamic Workers: TypeScript types as compact API surface.",
   "keywords": [
     "pi-package"
   ],
   "license": "MIT",
-  "pi": {
-    "extensions": [
-      "./extensions"
-    ],
-    "skills": [
-      "./skills"
-    ]
+  "type": "module",
+  "scripts": {
+    "lint": "oxlint",
+    "fmt": "oxfmt --check .",
+    "fmt:fix": "oxfmt .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:contract": "vitest run extensions/pi-codedb/contract.test.ts",
+    "check": "oxlint && oxfmt --check . && tsc --noEmit"
+  },
+  "devDependencies": {
+    "@mariozechner/pi-ai": "^0.65.0",
+    "@mariozechner/pi-coding-agent": "^0.65.0",
+    "@mariozechner/pi-tui": "^0.65.0",
+    "@sinclair/typebox": "^0.34.41",
+    "oxfmt": "^0.42.0",
+    "oxlint": "^1.57.0",
+    "typescript": "^5.8.0",
+    "vitest": "^3.1.1"
   },
   "peerDependencies": {
     "@mariozechner/pi-ai": "*",
@@ -21,15 +32,12 @@
     "@mariozechner/pi-tui": "*",
     "@sinclair/typebox": "*"
   },
-  "scripts": {
-    "test": "vitest run",
-    "test:contract": "vitest run extensions/pi-codedb/contract.test.ts"
-  },
-  "devDependencies": {
-    "@mariozechner/pi-ai": "^0.65.0",
-    "@mariozechner/pi-coding-agent": "^0.65.0",
-    "@mariozechner/pi-tui": "^0.65.0",
-    "@sinclair/typebox": "^0.34.41",
-    "vitest": "^3.1.1"
+  "pi": {
+    "extensions": [
+      "./extensions"
+    ],
+    "skills": [
+      "./skills"
+    ]
   }
 }

@@ -57,16 +57,16 @@ function shape(value: unknown): unknown {
 // ---------------------------------------------------------------------------
 
 const ENDPOINTS = [
-  { name: "health",  path: "/health" },
-  { name: "seq",     path: "/seq" },
-  { name: "tree",    path: "/explore/tree" },
+  { name: "health", path: "/health" },
+  { name: "seq", path: "/seq" },
+  { name: "tree", path: "/explore/tree" },
   { name: "outline", path: "/explore/outline?path=package.json" },
-  { name: "symbol",  path: "/explore/symbol?name=default" },
-  { name: "search",  path: "/explore/search?q=codedb&max=3" },
-  { name: "word",    path: "/explore/word?q=codedb" },
-  { name: "hot",     path: "/explore/hot?limit=3" },
-  { name: "deps",    path: "/explore/deps?path=package.json" },
-  { name: "read",    path: "/file/read?path=package.json&start=1&end=3" },
+  { name: "symbol", path: "/explore/symbol?name=default" },
+  { name: "search", path: "/explore/search?q=codedb&max=3" },
+  { name: "word", path: "/explore/word?q=codedb" },
+  { name: "hot", path: "/explore/hot?limit=3" },
+  { name: "deps", path: "/explore/deps?path=package.json" },
+  { name: "read", path: "/file/read?path=package.json&start=1&end=3" },
 ] as const;
 
 // ---------------------------------------------------------------------------
@@ -79,7 +79,7 @@ beforeAll(async () => {
   } catch {
     throw new Error(
       `codedb server not reachable at ${CODEDB_BASE}. ` +
-        `Start it with: codedb serve <project-path>`
+        `Start it with: codedb serve <project-path>`,
     );
   }
 });

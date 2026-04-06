@@ -1,0 +1,69 @@
+name: codedb release sync
+
+on:
+  schedule:
+    - cron: "0 */6 * * *" # every 6 hours
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  CODEDB_REPO: justrach/codedb
+
+jobs:
+  check-release:
+    runs-on: ubuntu-latest
+    outputs:
+      new_version: ${{ steps.check.outputs.new_version }}
+      has_update: ${{ steps.check.outputs.has_update }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Check for new codedb release
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          latest=$(gh api "repos/${CODEDB_REPO}/releases/latest" --jq '.tag_name' 2>/dev/null || echo "")
+          if [ -z "$latest" ]; then
+            echo "has_update=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Read tracked version (empty if file doesn't exist)
+          tracked=""
+          if [ -f .codedb-version ]; then
+            tracked=$(cat .codedb-version)
+          fi
+
+          if [ "$latest" = "$tracked" ]; then
+            echo "has_update=false" >> "$GITHUB_OUTPUT"
+            echo "Already tracking codedb $latest"
+          else
+            echo "has_update=true" >> "$GITHUB_OUTPUT"
+            echo "new_version=$latest" >> "$GITHUB_OUTPUT"
+            echo "New codedb release: $latest (was: ${tracked:-none})"
+          fi
+
+  update:
+    needs: check-release
+    if: needs.check-release.outputs.has_update == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Update tracked codedb version
+        run: |
+          echo "${{ needs.check-release.outputs.new_version }}" > .codedb-version
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .codedb-version
+          git commit -m "chore: track codedb ${{ needs.check-release.outputs.new_version }}"
+          git push
+
+      # tagpr runs on push to main, so the commit above triggers it automatically
