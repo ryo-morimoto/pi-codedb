@@ -57,21 +57,20 @@ const HEALTH_POLL_MS = 300;
 const CODEDB_TYPE_DEFS = `\
 interface CodeDB {
   tree(): Promise<{ tree: string }>;
-  outline(path: string): Promise<{ path: string; language: string; lines: number; symbols: Symbol[] }>;
-  symbol(name: string): Promise<{ results: SymbolHit[] }>;
+  outline(path: string): Promise<{ path: string; language: string; lines: number; bytes: number; symbols: Symbol[] }>;
+  symbol(name: string): Promise<{ name: string; results: SymbolHit[] }>;
   search(query: string, max?: number): Promise<{ query: string; results: SearchHit[] }>;
-  word(word: string): Promise<{ word: string; results: WordHit[] }>;
-  hot(limit?: number): Promise<{ files: HotFile[] }>;
-  deps(path: string): Promise<{ path: string; dependents: string[] }>;
-  read(path: string, startLine?: number, endLine?: number): Promise<{ path: string; content: string }>;
+  word(word: string): Promise<{ query: string; hits: WordHit[] }>;
+  hot(limit?: number): Promise<{ files: string[] }>;
+  deps(path: string): Promise<{ path: string; imported_by: string[] }>;
+  read(path: string, startLine?: number, endLine?: number): Promise<{ path: string; content: string; size: number }>;
   status(): Promise<{ status: string; seq: number }>;
 }
 
 interface Symbol { name: string; kind: string; line: number; end_line?: number }
-interface SymbolHit { path: string; line: number; kind: string; context?: string }
+interface SymbolHit { path: string; line: number; kind: string; detail?: string }
 interface SearchHit { path: string; line: number; text: string }
-interface WordHit { path: string; line: number; context: string }
-interface HotFile { path: string; modified: number }
+interface WordHit { path: string; line: number }
 `;
 
 // ---------------------------------------------------------------------------

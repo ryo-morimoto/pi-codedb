@@ -1,0 +1,91 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`codedb API contract (snapshot) > deps response shape 1`] = `
+{
+  "imported_by": "empty_array",
+  "path": "string",
+}
+`;
+
+exports[`codedb API contract (snapshot) > health response shape 1`] = `
+{
+  "status": "string",
+}
+`;
+
+exports[`codedb API contract (snapshot) > hot response shape 1`] = `
+{
+  "files": [
+    "string",
+  ],
+}
+`;
+
+exports[`codedb API contract (snapshot) > outline response shape 1`] = `
+{
+  "bytes": "number",
+  "language": "string",
+  "lines": "number",
+  "path": "string",
+  "symbols": "empty_array",
+}
+`;
+
+exports[`codedb API contract (snapshot) > read response shape 1`] = `
+{
+  "content": "string",
+  "path": "string",
+  "size": "number",
+}
+`;
+
+exports[`codedb API contract (snapshot) > search response shape 1`] = `
+{
+  "query": "string",
+  "results": [
+    {
+      "line": "number",
+      "path": "string",
+      "text": "string",
+    },
+  ],
+}
+`;
+
+exports[`codedb API contract (snapshot) > seq response shape 1`] = `
+{
+  "seq": "number",
+}
+`;
+
+exports[`codedb API contract (snapshot) > symbol response shape 1`] = `
+{
+  "name": "string",
+  "results": [
+    {
+      "detail": "string",
+      "kind": "string",
+      "line": "number",
+      "path": "string",
+    },
+  ],
+}
+`;
+
+exports[`codedb API contract (snapshot) > tree response shape 1`] = `
+{
+  "tree": "string",
+}
+`;
+
+exports[`codedb API contract (snapshot) > word response shape 1`] = `
+{
+  "hits": [
+    {
+      "line": "number",
+      "path": "string",
+    },
+  ],
+  "query": "string",
+}
+`;
