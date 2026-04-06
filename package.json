@@ -1,0 +1,30 @@
+{
+  "name": "pi-codedb",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Code intelligence for pi — structural indexing, trigram search, symbol lookup via codedb REST API. Inspired by Cloudflare Dynamic Workers: TypeScript types as compact API surface.",
+  "keywords": [
+    "pi-package"
+  ],
+  "license": "MIT",
+  "pi": {
+    "extensions": [
+      "./extensions"
+    ],
+    "skills": [
+      "./skills"
+    ]
+  },
+  "peerDependencies": {
+    "@mariozechner/pi-ai": "*",
+    "@mariozechner/pi-coding-agent": "*",
+    "@mariozechner/pi-tui": "*",
+    "@sinclair/typebox": "*"
+  },
+  "devDependencies": {
+    "@mariozechner/pi-ai": "^0.65.0",
+    "@mariozechner/pi-coding-agent": "^0.65.0",
+    "@mariozechner/pi-tui": "^0.65.0",
+    "@sinclair/typebox": "^0.34.41"
+  }
+}
