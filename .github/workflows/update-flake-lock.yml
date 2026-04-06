@@ -1,0 +1,47 @@
+name: update flake.lock
+
+on:
+  schedule:
+    - cron: "0 3 * * 1" # every Monday 03:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: DeterminateSystems/nix-installer-action@ef8a148080ab6020fd15196c2084a2eea5ff2d25 # v22
+
+      - name: Update flake.lock
+        run: nix flake update
+
+      - name: Create PR if changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if git diff --quiet flake.lock; then
+            echo "flake.lock is up to date"
+            exit 0
+          fi
+
+          branch="chore/update-flake-lock"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$branch"
+          git add flake.lock
+          git commit -m "chore: update flake.lock"
+          git push -f origin "$branch"
+
+          # Create PR if one doesn't already exist
+          if ! gh pr list --head "$branch" --state open --json number --jq '.[0].number' | grep -q .; then
+            gh pr create \
+              --title "chore: update flake.lock" \
+              --body "Automated weekly flake.lock update." \
+              --head "$branch" \
+              --base main
+          fi

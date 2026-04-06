@@ -2,9 +2,3 @@ onlyBuiltDependencies:
   - koffi
 
 minimumReleaseAge: 10080
-
-minimumReleaseAgeExclude:
-  - koffi
-  - "@esbuild/*"
-  - esbuild
-  - "@types/*"

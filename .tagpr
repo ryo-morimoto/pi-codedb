@@ -1,6 +1,6 @@
 [tagpr]
 	releaseBranch = main
-	versionFile = package.json
+	versionFile = package.json, flake.nix
 	vPrefix = true
 	changelog = true
 	release = true

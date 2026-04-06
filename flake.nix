@@ -11,6 +11,8 @@
       supportedSystems = [
         "x86_64-linux"
         "aarch64-linux"
+        "x86_64-darwin"
+        "aarch64-darwin"
       ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
     in
@@ -23,7 +25,7 @@
         {
           default = pkgs.stdenvNoCC.mkDerivation {
             pname = "pi-codedb";
-            version = "0.1.0";
+            version = "1.0.0";
 
             src = self;
 
