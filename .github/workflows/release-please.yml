@@ -12,47 +12,8 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    outputs:
-      pr: ${{ steps.release.outputs.pr }}
-      pr_branch: ${{ fromJSON(steps.release.outputs.pr || '{}').headBranchName || '' }}
     steps:
       - uses: googleapis/release-please-action@16a9c90856f42705d54a6fda1823352bdc62cf38 # v4.4.0
-        id: release
         with:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
-
-  format:
-    needs: release-please
-    if: needs.release-please.outputs.pr_branch != ''
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          ref: ${{ needs.release-please.outputs.pr_branch }}
-
-      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
-
-      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
-        with:
-          node-version-file: .node-version
-          cache: pnpm
-
-      - run: pnpm install --frozen-lockfile
-
-      - name: Format generated files
-        run: pnpm fmt:fix
-
-      - name: Commit if changed
-        run: |
-          if git diff --quiet; then
-            echo "No formatting changes needed"
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -u
-          git commit -m "chore: format generated files"
-          git push
