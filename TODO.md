@@ -1,42 +1,45 @@
-# TODO: codedb REST API の未対応項目
+# TODO: pi-codedb 改善項目
 
-codedb の MCP インターフェースで公開されているが、REST API (`GET /...`) では未実装または無視される項目の一覧。
-pi-codedb は REST API 経由で通信するため、これらが対応されるまで公開できない。
+## 完了済み
 
-検証方法: `contract.test.ts` のパリティマトリクス（with/without 比較）
+- [x] HTTP serve → MCP stdio 移行（レイテンシ ~50x 改善、ポート競合解消）
+- [x] 複数プロジェクト対応（codedb MCP の ProjectCache + `project` 引数）
+- [x] contract テストを MCP ベースに書き直し（AAA パターン）
 
-## REST API に存在しないエンドポイント
+## MCP 専用ツールの公開検討
 
-MCP 専用で REST API にルートが存在しない（404 を返す）。
+MCP で利用可能だが、pi-codedb の extension ツールとして未公開のもの。
+需要に応じて `pi.registerTool` で追加する。
 
-| MCP ツール        | 説明                                               |
-| ----------------- | -------------------------------------------------- |
-| `codedb_edit`     | 行ベースのファイル編集 (replace/insert/delete)     |
-| `codedb_find`     | ファジーファイル名検索 (typo-tolerant subsequence) |
-| `codedb_bundle`   | 最大20クエリのバッチ実行                           |
-| `codedb_remote`   | GitHub リポの cloud intelligence                   |
-| `codedb_projects` | ローカル全 indexed プロジェクト一覧                |
-| `codedb_index`    | 指定パスの index 作成                              |
+| MCP ツール        | 説明                                               | 優先度 |
+| ----------------- | -------------------------------------------------- | ------ |
+| `codedb_find`     | ファジーファイル名検索 (typo-tolerant subsequence) | 高     |
+| `codedb_bundle`   | 最大20クエリのバッチ実行                           | 中     |
+| `codedb_edit`     | 行ベースのファイル編集 (replace/insert/delete)     | 低     |
+| `codedb_remote`   | GitHub リポの cloud intelligence                   | 低     |
+| `codedb_projects` | ローカル全 indexed プロジェクト一覧                | 低     |
+| `codedb_index`    | 指定パスの index 作成                              | 低     |
+| `codedb_query`    | パイプライン型の複合検索                           | 中     |
 
-## REST API でパラメータが無視される
+## パラメータ拡張
 
-エンドポイント自体は存在するが、クエリパラメータがパースされず無視される。
+現在 pi-codedb が公開しているツールは基本パラメータのみ。
+codedb MCP が対応する追加パラメータを extension 側でも公開する。
 
-| エンドポイント     | パラメータ            | MCP での説明                         |
-| ------------------ | --------------------- | ------------------------------------ |
-| `/file/read`       | `start`, `end`        | 行範囲指定 (1-indexed)               |
-| `/file/read`       | `compact`             | コメント・空行のスキップ             |
-| `/file/read`       | `if_hash`             | コンテンツハッシュによるキャッシュ   |
-| `/explore/search`  | `max` / `max_results` | 結果件数の上限（常に50件固定）       |
-| `/explore/search`  | `scope`               | 結果にシンボルスコープを付与         |
-| `/explore/search`  | `compact`             | コメント・空行のスキップ             |
-| `/explore/search`  | `regex`               | 正規表現パターンとして扱う           |
-| `/explore/outline` | `compact`             | 詳細コメントなしの簡潔形式           |
-| `/explore/symbol`  | `body`                | シンボルのソースコード本文を含める   |
-| `/explore/hot`     | `limit`               | 返すファイル数の上限（常に10件固定） |
+| ツール           | 追加パラメータ                  | 説明                           |
+| ---------------- | ------------------------------- | ------------------------------ |
+| `codedb_read`    | `line_start`, `line_end`        | 行範囲指定                     |
+| `codedb_read`    | `compact`                       | コメント・空行スキップ         |
+| `codedb_read`    | `if_hash`                       | コンテンツハッシュキャッシュ   |
+| `codedb_search`  | `max_results`                   | 結果件数の上限                 |
+| `codedb_search`  | `scope`                         | シンボルスコープの付与         |
+| `codedb_search`  | `compact`, `regex`              | 結果フィルタ・正規表現         |
+| `codedb_outline` | `compact`                       | 簡潔形式                       |
+| `codedb_symbol`  | `body`                          | ソースコード本文を含める       |
+| `codedb_hot`     | `limit`                         | 返すファイル数の上限           |
 
-## OpenAPI / スキーマ公開
+## その他
 
-REST API のパラメータを自動検出する手段がない。
-codedb 側で OpenAPI スキーマまたは同等のエンドポイントが公開されれば、
-pi-codedb のパリティテストを完全に自動化できる。
+- [ ] MCP プロセスの再接続ロジック（crash recovery）
+- [ ] codedb バージョン検出とプロトコルバージョンのネゴシエーション
+- [ ] `.pi-lens/` をテストのスナップショットから除外（不安定なファイル）
