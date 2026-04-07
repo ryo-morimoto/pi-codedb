@@ -1,0 +1,23 @@
+repos:
+  - repo: local
+    hooks:
+      - id: lint
+        name: oxlint
+        entry: pnpm lint
+        language: system
+        pass_filenames: false
+        files: '\.ts$'
+
+      - id: fmt
+        name: oxfmt
+        entry: pnpm fmt
+        language: system
+        pass_filenames: false
+        files: '\.ts$'
+
+      - id: typecheck
+        name: typecheck
+        entry: pnpm typecheck
+        language: system
+        pass_filenames: false
+        files: '\.ts$'

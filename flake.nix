@@ -25,7 +25,7 @@
         {
           default = pkgs.stdenvNoCC.mkDerivation {
             pname = "pi-codedb";
-            version = "1.0.1";
+            version = "1.0.2";
 
             src = self;
 
