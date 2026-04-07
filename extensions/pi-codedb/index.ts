@@ -22,7 +22,7 @@
  * - System prompt with TypeScript type definitions for efficient context
  */
 
-import type { ExtensionAPI, ExtensionContext } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { truncateTail, DEFAULT_MAX_BYTES, DEFAULT_MAX_LINES } from "@mariozechner/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
 import { spawn, type ChildProcess } from "node:child_process";
@@ -161,28 +161,28 @@ function stopServer() {
 // Extension entry point
 // ---------------------------------------------------------------------------
 
-export default function (api: ExtensionAPI, context: ExtensionContext) {
+export default function (pi: ExtensionAPI) {
   let serverReady = false;
 
   // ── Lifecycle: start codedb on agent start, inject system prompt ──
-  api.on("before_agent_start", async () => {
-    const projectPath = context.cwd || process.cwd();
+  pi.on("before_agent_start", async (event, ctx) => {
+    const projectPath = ctx.cwd || process.cwd();
     serverReady = await ensureServer(projectPath);
     if (serverReady) {
-      context.ui.setStatus("codedb", "codedb: ready");
-      return { systemPrompt: CODEDB_SYSTEM_PROMPT };
+      ctx.ui.setStatus("codedb", "codedb: ready");
+      return { systemPrompt: event.systemPrompt + "\n\n" + CODEDB_SYSTEM_PROMPT };
     }
-    context.ui.setStatus("codedb", "codedb: offline");
+    ctx.ui.setStatus("codedb", "codedb: offline");
     return undefined;
   });
 
-  api.on("session_shutdown", () => {
+  pi.on("session_shutdown", async () => {
     stopServer();
   });
 
   // ── Tools ──
 
-  api.registerTool({
+  pi.registerTool({
     name: "codedb_tree",
     label: "CodeDB Tree",
     description: "File tree with language, line counts, and symbol counts",
@@ -197,7 +197,7 @@ export default function (api: ExtensionAPI, context: ExtensionContext) {
     },
   });
 
-  api.registerTool({
+  pi.registerTool({
     name: "codedb_outline",
     label: "CodeDB Outline",
     description: "Symbols in a file: functions, structs, imports with line numbers",
@@ -210,7 +210,7 @@ export default function (api: ExtensionAPI, context: ExtensionContext) {
     },
   });
 
-  api.registerTool({
+  pi.registerTool({
     name: "codedb_symbol",
     label: "CodeDB Symbol",
     description: "Find where a symbol is defined across the codebase",
@@ -223,7 +223,7 @@ export default function (api: ExtensionAPI, context: ExtensionContext) {
     },
   });
 
-  api.registerTool({
+  pi.registerTool({
     name: "codedb_search",
     label: "CodeDB Search",
     description: "Trigram-accelerated full-text search (supports regex)",
@@ -240,7 +240,7 @@ export default function (api: ExtensionAPI, context: ExtensionContext) {
     },
   });
 
-  api.registerTool({
+  pi.registerTool({
     name: "codedb_word",
     label: "CodeDB Word",
     description: "O(1) inverted index word lookup — exact identifier match",
@@ -253,7 +253,7 @@ export default function (api: ExtensionAPI, context: ExtensionContext) {
     },
   });
 
-  api.registerTool({
+  pi.registerTool({
     name: "codedb_hot",
     label: "CodeDB Hot",
     description: "Recently modified files",
@@ -267,7 +267,7 @@ export default function (api: ExtensionAPI, context: ExtensionContext) {
     },
   });
 
-  api.registerTool({
+  pi.registerTool({
     name: "codedb_deps",
     label: "CodeDB Deps",
     description: "Reverse dependency graph — which files import this file",
@@ -280,7 +280,7 @@ export default function (api: ExtensionAPI, context: ExtensionContext) {
     },
   });
 
-  api.registerTool({
+  pi.registerTool({
     name: "codedb_read",
     label: "CodeDB Read",
     description: "Read file content, optionally by line range",
@@ -298,7 +298,7 @@ export default function (api: ExtensionAPI, context: ExtensionContext) {
     },
   });
 
-  api.registerTool({
+  pi.registerTool({
     name: "codedb_status",
     label: "CodeDB Status",
     description: "Index status: health check and current sequence number",
