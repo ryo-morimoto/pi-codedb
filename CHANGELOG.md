@@ -1,5 +1,7 @@
 # Changelog
 
+## [v1.0.4](https://github.com/ryo-morimoto/pi-codedb/compare/v1.0.3...v1.0.4) - 2026-04-07
+
 ## [v1.0.3](https://github.com/ryo-morimoto/pi-codedb/compare/v1.0.2...v1.0.3) - 2026-04-07
 
 - chore: track codedb v0.2.54 by @github-actions[bot] in https://github.com/ryo-morimoto/pi-codedb/pull/4
