@@ -71,6 +71,7 @@ jobs:
       - name: Update tracked version and flake.nix hashes
         env:
           NEW_VERSION: ${{ needs.check-release.outputs.new_version }}
+          CODEDB_REPO: ${{ env.CODEDB_REPO }}
         run: |
           # Strip leading 'v' for the version number used in flake.nix
           version="${NEW_VERSION#v}"
@@ -105,13 +106,14 @@ jobs:
           done
 
           # Verify flake evaluates correctly
-          nix flake check --no-build 2>&1 || true
+          nix flake check --no-build
           echo "Updated flake.nix for codedb ${version}"
 
       - name: Create PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NEW_VERSION: ${{ needs.check-release.outputs.new_version }}
+          CODEDB_REPO: ${{ env.CODEDB_REPO }}
         run: |
           branch="chore/track-codedb-${NEW_VERSION}"
           git config user.name "github-actions[bot]"
@@ -123,19 +125,16 @@ jobs:
 
           gh pr create \
             --title "chore: track codedb ${NEW_VERSION}" \
-            --body "$(cat <<'EOF'
-## Summary
+            --body "## Summary
 
-Automated: detected new [codedb release](https://github.com/${{ env.CODEDB_REPO }}/releases/tag/${{ needs.check-release.outputs.new_version }}).
+          Automated: detected new [codedb release](https://github.com/${CODEDB_REPO}/releases/tag/${NEW_VERSION}).
 
-- Updated `.codedb-version`
-- Updated `flake.nix` codedbVersion and platform hashes via `nix-prefetch-url`
+          - Updated \`.codedb-version\`
+          - Updated \`flake.nix\` codedbVersion and platform hashes via \`nix-prefetch-url\`
 
-## Before merging
+          ## Before merging
 
-- [ ] Run contract tests (`npx vitest run`) to check for parameter parity changes
-- [ ] If parity matrix snapshot changed, update pi-codedb tool definitions accordingly
-EOF
-          )" \
+          - [ ] Run contract tests (\`npx vitest run\`) to check for parameter parity changes
+          - [ ] If parity matrix snapshot changed, update pi-codedb tool definitions accordingly" \
             --head "$branch" \
             --base main
