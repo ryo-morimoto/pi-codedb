@@ -102,6 +102,7 @@ function textResult(text: string, durationMs: number, tool: string) {
 
 let mcpProcess: ChildProcess | null = null;
 let mcpReady = false;
+let mcpProjectPath = ""; // project path used to start the MCP process
 let rpcIdCounter = 0;
 const pendingRequests = new Map<
   number,
@@ -200,6 +201,12 @@ function sendNotification(method: string, params?: Record<string, unknown>): voi
 
 /** Call a codedb MCP tool and return the text content from the result. */
 async function mcpToolCall(toolName: string, args: Record<string, unknown> = {}): Promise<string> {
+  // Auto-reconnect on crash
+  if (!mcpProcess || !mcpReady) {
+    const ok = await ensureServer(mcpProjectPath || currentProjectPath);
+    if (!ok) throw new Error("codedb MCP not available");
+  }
+
   const result = (await sendRpc("tools/call", {
     name: toolName,
     arguments: args,
@@ -233,6 +240,7 @@ async function ensureServer(projectPath: string): Promise<boolean> {
   stopServer();
 
   mcpProcess = startMcpProcess(projectPath);
+  mcpProjectPath = projectPath;
 
   // Initialize MCP handshake
   try {
@@ -256,7 +264,7 @@ async function ensureServer(projectPath: string): Promise<boolean> {
       } catch {
         // not ready yet
       }
-      await new Promise((r) => setTimeout(r, 300));
+      await new Promise((resolve) => setTimeout(resolve, 300));
     }
     // Timeout but process is alive — may still be indexing, allow usage
     return true;
@@ -394,7 +402,9 @@ export default function (pi: ExtensionAPI) {
     return args;
   }
 
-  // ── Tools ──
+  // ═══════════════════════════════════════════════════════════════════════
+  // Tools
+  // ═══════════════════════════════════════════════════════════════════════
 
   pi.registerTool({
     name: "codedb_tree",
@@ -426,10 +436,17 @@ export default function (pi: ExtensionAPI) {
     promptGuidelines: ["ALWAYS call codedb_outline before codedb_read on any file."],
     parameters: Type.Object({
       path: Type.String({ description: "File path relative to project root" }),
+      compact: Type.Optional(
+        Type.Boolean({
+          description: "Condensed format without detail comments (default: false)",
+        }),
+      ),
     }),
     execute: async (_toolCallId, params) => {
       const start = Date.now();
-      const text = await mcpToolCall("codedb_outline", withProject({ path: params.path }));
+      const args: Record<string, unknown> = { path: params.path };
+      if (params.compact) args.compact = true;
+      const text = await mcpToolCall("codedb_outline", withProject(args));
       return textResult(text, Date.now() - start, "codedb_outline");
     },
   });
@@ -442,10 +459,17 @@ export default function (pi: ExtensionAPI) {
     promptSnippet: "codedb_symbol <name> — find symbol definitions across codebase",
     parameters: Type.Object({
       name: Type.String({ description: "Symbol name to search for" }),
+      body: Type.Optional(
+        Type.Boolean({
+          description: "Include source body for each symbol (default: false)",
+        }),
+      ),
     }),
     execute: async (_toolCallId, params) => {
       const start = Date.now();
-      const text = await mcpToolCall("codedb_symbol", withProject({ name: params.name }));
+      const args: Record<string, unknown> = { name: params.name };
+      if (params.body) args.body = true;
+      const text = await mcpToolCall("codedb_symbol", withProject(args));
       return textResult(text, Date.now() - start, "codedb_symbol");
     },
   });
@@ -458,11 +482,38 @@ export default function (pi: ExtensionAPI) {
     promptSnippet: "codedb_search <query> — trigram full-text search (up to 50 results)",
     promptGuidelines: ["Use codedb_search instead of grep for text search."],
     parameters: Type.Object({
-      query: Type.String({ description: "Search query (substring match)" }),
+      query: Type.String({
+        description: "Search query (substring match, or regex if regex=true)",
+      }),
+      max_results: Type.Optional(
+        Type.Integer({
+          description: "Maximum results to return (default: 50)",
+        }),
+      ),
+      scope: Type.Optional(
+        Type.Boolean({
+          description: "Annotate results with enclosing symbol scope (default: false)",
+        }),
+      ),
+      compact: Type.Optional(
+        Type.Boolean({
+          description: "Skip comment and blank lines in results (default: false)",
+        }),
+      ),
+      regex: Type.Optional(
+        Type.Boolean({
+          description: "Treat query as regex pattern (default: false)",
+        }),
+      ),
     }),
     execute: async (_toolCallId, params) => {
       const start = Date.now();
-      const text = await mcpToolCall("codedb_search", withProject({ query: params.query }));
+      const args: Record<string, unknown> = { query: params.query };
+      if (params.max_results != null) args.max_results = params.max_results;
+      if (params.scope) args.scope = true;
+      if (params.compact) args.compact = true;
+      if (params.regex) args.regex = true;
+      const text = await mcpToolCall("codedb_search", withProject(args));
       return textResult(text, Date.now() - start, "codedb_search");
     },
   });
@@ -490,12 +541,20 @@ export default function (pi: ExtensionAPI) {
     name: "codedb_hot",
     label: "CodeDB Hot",
     description:
-      "10 most recently modified files, ordered by recency. Useful to see what's being actively worked on.",
-    promptSnippet: "codedb_hot — 10 most recently modified files",
-    parameters: Type.Object({}),
-    execute: async () => {
+      "Most recently modified files, ordered by recency. Useful to see what's being actively worked on.",
+    promptSnippet: "codedb_hot — recently modified files",
+    parameters: Type.Object({
+      limit: Type.Optional(
+        Type.Integer({
+          description: "Number of files to return (default: 10)",
+        }),
+      ),
+    }),
+    execute: async (_toolCallId, params) => {
       const start = Date.now();
-      const text = await mcpToolCall("codedb_hot", withProject({}));
+      const args: Record<string, unknown> = {};
+      if (params.limit != null) args.limit = params.limit;
+      const text = await mcpToolCall("codedb_hot", withProject(args));
       return textResult(text, Date.now() - start, "codedb_hot");
     },
   });
@@ -523,17 +582,43 @@ export default function (pi: ExtensionAPI) {
     name: "codedb_read",
     label: "CodeDB Read",
     description:
-      "Read entire file content. Use codedb_outline first to understand structure — it's 4-15x more token-efficient than reading the whole file.",
+      "Read file contents. Use codedb_outline first to find the line numbers you need, then read only that range with line_start/line_end. Avoid reading entire large files.",
     promptSnippet: "codedb_read <path> — read file content (use outline first)",
     promptGuidelines: [
       "Use codedb_outline first, then codedb_read only when you need actual content.",
     ],
     parameters: Type.Object({
       path: Type.String({ description: "File path relative to project root" }),
+      line_start: Type.Optional(
+        Type.Integer({
+          description: "Start line (1-indexed, inclusive). Omit for full file.",
+        }),
+      ),
+      line_end: Type.Optional(
+        Type.Integer({
+          description: "End line (1-indexed, inclusive). Omit to read to EOF.",
+        }),
+      ),
+      compact: Type.Optional(
+        Type.Boolean({
+          description: "Skip comment and blank lines (default: false)",
+        }),
+      ),
+      if_hash: Type.Optional(
+        Type.String({
+          description:
+            "Previous content hash. If unchanged, returns short 'unchanged:HASH' response.",
+        }),
+      ),
     }),
     execute: async (_toolCallId, params) => {
       const start = Date.now();
-      const text = await mcpToolCall("codedb_read", withProject({ path: params.path }));
+      const args: Record<string, unknown> = { path: params.path };
+      if (params.line_start != null) args.line_start = params.line_start;
+      if (params.line_end != null) args.line_end = params.line_end;
+      if (params.compact) args.compact = true;
+      if (params.if_hash) args.if_hash = params.if_hash;
+      const text = await mcpToolCall("codedb_read", withProject(args));
       return textResult(text, Date.now() - start, "codedb_read");
     },
   });
@@ -591,6 +676,176 @@ export default function (pi: ExtensionAPI) {
         maxBytes: DEFAULT_MAX_BYTES,
       });
       return textResult(result.content, Date.now() - start, "codedb_snapshot");
+    },
+  });
+
+  // ── New tools (MCP-only) ──
+
+  pi.registerTool({
+    name: "codedb_find",
+    label: "CodeDB Find",
+    description:
+      "Fuzzy file search — finds files by approximate name. Typo-tolerant subsequence matching with word-boundary and filename bonuses. Use when you know roughly what file you're looking for but not the exact path.",
+    promptSnippet: "codedb_find <query> — fuzzy file search",
+    parameters: Type.Object({
+      query: Type.String({
+        description: "Fuzzy search query (e.g. 'authmidlware', 'test_auth', 'main.zig')",
+      }),
+      max_results: Type.Optional(
+        Type.Integer({
+          description: "Maximum results to return (default: 10)",
+        }),
+      ),
+    }),
+    execute: async (_toolCallId, params) => {
+      const start = Date.now();
+      const args: Record<string, unknown> = { query: params.query };
+      if (params.max_results != null) args.max_results = params.max_results;
+      const text = await mcpToolCall("codedb_find", withProject(args));
+      return textResult(text, Date.now() - start, "codedb_find");
+    },
+  });
+
+  pi.registerTool({
+    name: "codedb_bundle",
+    label: "CodeDB Bundle",
+    description:
+      "Batch multiple queries in one call. Max 20 ops. Bundle outline+symbol+search, not full file reads. Total response is not size-capped.",
+    promptSnippet: "codedb_bundle — batch multiple codedb queries in one call",
+    parameters: Type.Object({
+      ops: Type.Array(
+        Type.Object({
+          tool: Type.String({
+            description: "Tool name (e.g. codedb_outline, codedb_symbol)",
+          }),
+          arguments: Type.Optional(
+            Type.Record(Type.String(), Type.Unknown(), {
+              description: "Tool arguments",
+            }),
+          ),
+        }),
+        { description: "Array of tool calls to execute (max 20)" },
+      ),
+    }),
+    execute: async (_toolCallId, params) => {
+      const start = Date.now();
+      const text = await mcpToolCall("codedb_bundle", withProject({ ops: params.ops }));
+      const result = truncateTail(text, {
+        maxLines: DEFAULT_MAX_LINES,
+        maxBytes: DEFAULT_MAX_BYTES,
+      });
+      return textResult(result.content, Date.now() - start, "codedb_bundle");
+    },
+  });
+
+  pi.registerTool({
+    name: "codedb_edit",
+    label: "CodeDB Edit",
+    description:
+      "Apply a line-based edit to a file. Supports replace (range), insert (after line), and delete (range) operations.",
+    promptSnippet: "codedb_edit — line-based file editing",
+    parameters: Type.Object({
+      path: Type.String({ description: "File path to edit" }),
+      op: Type.Union([Type.Literal("replace"), Type.Literal("insert"), Type.Literal("delete")], {
+        description: "Edit operation type",
+      }),
+      content: Type.Optional(Type.String({ description: "New content (for replace/insert)" })),
+      range_start: Type.Optional(
+        Type.Integer({
+          description: "Start line number (for replace/delete, 1-indexed)",
+        }),
+      ),
+      range_end: Type.Optional(
+        Type.Integer({
+          description: "End line number (for replace/delete, 1-indexed)",
+        }),
+      ),
+      after: Type.Optional(
+        Type.Integer({
+          description: "Insert after this line number (for insert)",
+        }),
+      ),
+    }),
+    execute: async (_toolCallId, params) => {
+      const start = Date.now();
+      const args: Record<string, unknown> = {
+        path: params.path,
+        op: params.op,
+      };
+      if (params.content != null) args.content = params.content;
+      if (params.range_start != null) args.range_start = params.range_start;
+      if (params.range_end != null) args.range_end = params.range_end;
+      if (params.after != null) args.after = params.after;
+      const text = await mcpToolCall("codedb_edit", withProject(args));
+      return textResult(text, Date.now() - start, "codedb_edit");
+    },
+  });
+
+  pi.registerTool({
+    name: "codedb_remote",
+    label: "CodeDB Remote",
+    description:
+      "Query any GitHub repo via cloud intelligence. Gets file tree, symbol outlines, or searches code in external repos without cloning.",
+    promptSnippet: "codedb_remote — query external GitHub repos",
+    parameters: Type.Object({
+      repo: Type.String({
+        description: "GitHub repo in owner/repo format (e.g. justrach/codedb)",
+      }),
+      action: Type.Union(
+        [
+          Type.Literal("tree"),
+          Type.Literal("outline"),
+          Type.Literal("search"),
+          Type.Literal("meta"),
+        ],
+        { description: "What to query: tree, outline, search, or meta" },
+      ),
+      query: Type.Optional(
+        Type.String({
+          description: "Search query (required when action=search)",
+        }),
+      ),
+    }),
+    execute: async (_toolCallId, params) => {
+      const start = Date.now();
+      const args: Record<string, unknown> = {
+        repo: params.repo,
+        action: params.action,
+      };
+      if (params.query) args.query = params.query;
+      const text = await mcpToolCall("codedb_remote", args); // no project needed
+      return textResult(text, Date.now() - start, "codedb_remote");
+    },
+  });
+
+  pi.registerTool({
+    name: "codedb_projects",
+    label: "CodeDB Projects",
+    description: "List all locally indexed projects with their paths and status.",
+    promptSnippet: "codedb_projects — list all indexed projects",
+    parameters: Type.Object({}),
+    execute: async () => {
+      const start = Date.now();
+      const text = await mcpToolCall("codedb_projects", {});
+      return textResult(text, Date.now() - start, "codedb_projects");
+    },
+  });
+
+  pi.registerTool({
+    name: "codedb_index",
+    label: "CodeDB Index",
+    description:
+      "Index a local folder. Scans all source files, builds outlines/trigrams/word indexes, and creates a codedb.snapshot. After indexing, the folder is queryable via the project param on any tool.",
+    promptSnippet: "codedb_index <path> — index a local folder",
+    parameters: Type.Object({
+      path: Type.String({
+        description: "Absolute path to the folder to index",
+      }),
+    }),
+    execute: async (_toolCallId, params) => {
+      const start = Date.now();
+      const text = await mcpToolCall("codedb_index", { path: params.path });
+      return textResult(text, Date.now() - start, "codedb_index");
     },
   });
 }

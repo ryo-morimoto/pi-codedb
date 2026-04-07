@@ -272,6 +272,68 @@ describe("codedb MCP response contract", () => {
     const text = dataBlock(result);
     expect(text).toContain("package.json");
   });
+
+  // ── New MCP-only tools ──
+
+  it("codedb_find does fuzzy file search", async () => {
+    const result = await callRaw("codedb_find", { query: "contracttest" });
+
+    const text = dataBlock(result);
+    expect(text).toContain("contract.test.ts");
+  });
+
+  it("codedb_bundle batches multiple queries", async () => {
+    const result = await callRaw("codedb_bundle", {
+      ops: [
+        { tool: "codedb_status", arguments: {} },
+        { tool: "codedb_outline", arguments: { path: "package.json" } },
+      ],
+    });
+
+    const text = dataBlock(result);
+    expect(text.length).toBeGreaterThan(0);
+  });
+
+  it("codedb_projects lists indexed projects", async () => {
+    const result = await callRaw("codedb_projects");
+
+    const text = dataBlock(result);
+    expect(text.length).toBeGreaterThan(0);
+  });
+
+  it("codedb_read with line_start/line_end returns partial content", async () => {
+    const result = await callRaw("codedb_read", {
+      path: "package.json",
+      line_start: 1,
+      line_end: 3,
+    });
+
+    const text = dataBlock(result);
+    expect(text).toContain('"name"');
+    expect(lines(text)).toBeLessThan(10);
+  });
+
+  it("codedb_symbol with body includes source", async () => {
+    const result = await callRaw("codedb_symbol", { name: "textResult", body: true });
+
+    const text = dataBlock(result);
+    expect(text).toContain("textResult");
+    expect(text).toContain("function");
+  });
+
+  it("codedb_search with regex enables pattern matching", async () => {
+    const result = await callRaw("codedb_search", { query: "function.*Server", regex: true });
+
+    const text = dataBlock(result);
+    expect(text.length).toBeGreaterThan(0);
+  });
+
+  it("codedb_hot with limit restricts count", async () => {
+    const result = await callRaw("codedb_hot", { limit: 2 });
+
+    const text = dataBlock(result);
+    expect(text.length).toBeGreaterThan(0);
+  });
 });
 
 // ═══════════════════════════════════════════════════════════════════════════

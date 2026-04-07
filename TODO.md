@@ -1,45 +1,21 @@
-# TODO: pi-codedb 改善項目
+# TODO: pi-codedb
 
 ## 完了済み
 
 - [x] HTTP serve → MCP stdio 移行（レイテンシ ~50x 改善、ポート競合解消）
 - [x] 複数プロジェクト対応（codedb MCP の ProjectCache + `project` 引数）
 - [x] contract テストを MCP ベースに書き直し（AAA パターン）
+- [x] MCP 専用ツール追加: `codedb_find`, `codedb_bundle`, `codedb_edit`, `codedb_remote`, `codedb_projects`, `codedb_index`
+- [x] 既存ツールのパラメータ拡張: `line_start/line_end`, `compact`, `if_hash`, `max_results`, `scope`, `regex`, `body`, `limit`
+- [x] MCP プロセスの自動再接続（crash recovery）
+- [x] `.pi-lens/` を `.gitignore` に追加
 
-## MCP 専用ツールの公開検討
+## 未対応（codedb 側の対応待ち）
 
-MCP で利用可能だが、pi-codedb の extension ツールとして未公開のもの。
-需要に応じて `pi.registerTool` で追加する。
+| 項目           | 説明                     | 状態                                            |
+| -------------- | ------------------------ | ----------------------------------------------- |
+| `codedb_query` | パイプライン型の複合検索 | codedb 0.2.54 で追加。ローカル版 (0.2.3) 未対応 |
 
-| MCP ツール        | 説明                                               | 優先度 |
-| ----------------- | -------------------------------------------------- | ------ |
-| `codedb_find`     | ファジーファイル名検索 (typo-tolerant subsequence) | 高     |
-| `codedb_bundle`   | 最大20クエリのバッチ実行                           | 中     |
-| `codedb_edit`     | 行ベースのファイル編集 (replace/insert/delete)     | 低     |
-| `codedb_remote`   | GitHub リポの cloud intelligence                   | 低     |
-| `codedb_projects` | ローカル全 indexed プロジェクト一覧                | 低     |
-| `codedb_index`    | 指定パスの index 作成                              | 低     |
-| `codedb_query`    | パイプライン型の複合検索                           | 中     |
+## 将来の改善候補
 
-## パラメータ拡張
-
-現在 pi-codedb が公開しているツールは基本パラメータのみ。
-codedb MCP が対応する追加パラメータを extension 側でも公開する。
-
-| ツール           | 追加パラメータ           | 説明                         |
-| ---------------- | ------------------------ | ---------------------------- |
-| `codedb_read`    | `line_start`, `line_end` | 行範囲指定                   |
-| `codedb_read`    | `compact`                | コメント・空行スキップ       |
-| `codedb_read`    | `if_hash`                | コンテンツハッシュキャッシュ |
-| `codedb_search`  | `max_results`            | 結果件数の上限               |
-| `codedb_search`  | `scope`                  | シンボルスコープの付与       |
-| `codedb_search`  | `compact`, `regex`       | 結果フィルタ・正規表現       |
-| `codedb_outline` | `compact`                | 簡潔形式                     |
-| `codedb_symbol`  | `body`                   | ソースコード本文を含める     |
-| `codedb_hot`     | `limit`                  | 返すファイル数の上限         |
-
-## その他
-
-- [ ] MCP プロセスの再接続ロジック（crash recovery）
-- [ ] codedb バージョン検出とプロトコルバージョンのネゴシエーション
-- [ ] `.pi-lens/` をテストのスナップショットから除外（不安定なファイル）
+- [ ] codedb バージョン検出（`tools/list` で利用可能なツールを動的に判定し、ない場合は登録をスキップ）
