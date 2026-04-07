@@ -17,11 +17,6 @@ import { DEFAULT_MAX_BYTES, DEFAULT_MAX_LINES, truncateTail } from "@mariozechne
 import { Type } from "@sinclair/typebox";
 
 // ---------------------------------------------------------------------------
-// Config
-// ---------------------------------------------------------------------------
-const STARTUP_TIMEOUT_MS = 15_000;
-
-// ---------------------------------------------------------------------------
 // Module state — project path scoped per session
 // ---------------------------------------------------------------------------
 let currentProjectPath = "";
@@ -242,7 +237,8 @@ async function ensureServer(projectPath: string): Promise<boolean> {
   mcpProcess = startMcpProcess(projectPath);
   mcpProjectPath = projectPath;
 
-  // Initialize MCP handshake
+  // Initialize MCP handshake — return as soon as handshake completes.
+  // Indexing continues in the background; tools work with partial results.
   try {
     await sendRpc("initialize", {
       protocolVersion: "2025-06-18",
@@ -251,22 +247,6 @@ async function ensureServer(projectPath: string): Promise<boolean> {
     });
     sendNotification("notifications/initialized");
     mcpReady = true;
-
-    // Wait for initial indexing — poll codedb_status until seq > 0
-    const deadline = Date.now() + STARTUP_TIMEOUT_MS;
-    while (Date.now() < deadline) {
-      try {
-        const statusText = await mcpToolCall("codedb_status", {});
-        const status = JSON.parse(statusText);
-        if (status?.seq > 0 || status?.status === "ok") {
-          return true;
-        }
-      } catch {
-        // not ready yet
-      }
-      await new Promise((resolve) => setTimeout(resolve, 300));
-    }
-    // Timeout but process is alive — may still be indexing, allow usage
     return true;
   } catch {
     stopServer();
@@ -314,13 +294,16 @@ export default function (pi: ExtensionAPI) {
     const projectPath = ctx.cwd || process.cwd();
     currentProjectPath = projectPath;
     ctx.ui.setStatus("codedb", "codedb: starting...");
-    warmupPromise = ensureServer(projectPath);
-    serverReady = await warmupPromise;
-    warmupPromise = null;
-    ctx.ui.setStatus(
-      "codedb",
-      serverReady ? `codedb: ready (${projectPath.split("/").pop()})` : "codedb: offline",
-    );
+    // Start server without blocking — don't wait for indexing to finish
+    warmupPromise = ensureServer(projectPath).then((ok) => {
+      serverReady = ok;
+      warmupPromise = null;
+      ctx.ui.setStatus(
+        "codedb",
+        ok ? `codedb: ready (${projectPath.split("/").pop()})` : "codedb: offline",
+      );
+      return ok;
+    });
   });
 
   pi.on("before_agent_start", async (event, ctx) => {
