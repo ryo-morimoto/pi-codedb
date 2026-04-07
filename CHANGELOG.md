@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.0](https://github.com/ryo-morimoto/pi-codedb/compare/pi-codedb-v1.2.0...pi-codedb-v1.3.0) (2026-04-07)
+
+
+### Features
+
+* add all MCP tools and parameter extensions ([e029096](https://github.com/ryo-morimoto/pi-codedb/commit/e0290969833c4c3ed80af9cbc2255e1f4c1ee4db))
+* add nix devShell with node, pnpm, and codedb ([566dc57](https://github.com/ryo-morimoto/pi-codedb/commit/566dc578046025b7bf89d2b74c3dad32c3a6d3a1))
+
 ## [1.2.0](https://github.com/ryo-morimoto/pi-codedb/compare/pi-codedb-v1.1.0...pi-codedb-v1.2.0) (2026-04-07)
 
 ### Features
