@@ -1,5 +1,21 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`codedb API contract (snapshot) > changes response shape 1`] = `
+{
+  "changes": [
+    {
+      "op": "string",
+      "path": "string",
+      "seq": "number",
+      "size": "number",
+      "timestamp": "number",
+    },
+  ],
+  "seq": "number",
+  "since": "number",
+}
+`;
+
 exports[`codedb API contract (snapshot) > deps response shape 1`] = `
 {
   "imported_by": "empty_array",
@@ -42,19 +58,3518 @@ exports[`codedb API contract (snapshot) > read response shape 1`] = `
 exports[`codedb API contract (snapshot) > search response shape 1`] = `
 {
   "query": "string",
-  "results": [
-    {
-      "line": "number",
-      "path": "string",
-      "text": "string",
-    },
-  ],
+  "results": "empty_array",
 }
 `;
 
 exports[`codedb API contract (snapshot) > seq response shape 1`] = `
 {
   "seq": "number",
+}
+`;
+
+exports[`codedb API contract (snapshot) > snapshot response shape 1`] = `
+{
+  "dep_graph": {
+    ".dependency-cruiser.cjs": "empty_array",
+    ".git": "empty_array",
+    ".gitignore": "empty_array",
+    ".pi-lens/cache/jscpd.json": "empty_array",
+    ".pi-lens/cache/jscpd.meta.json": "empty_array",
+    ".pi-lens/cache/knip.json": "empty_array",
+    ".pi-lens/cache/knip.meta.json": "empty_array",
+    ".pi-lens/cache/todo-baseline.json": "empty_array",
+    ".pi-lens/cache/todo-baseline.meta.json": "empty_array",
+    "AGENTS.md": "empty_array",
+    "README.md": "empty_array",
+    "biome.json": "empty_array",
+    "components.json": "empty_array",
+    "docs/adr/0000-adopt-adr.md": "empty_array",
+    "docs/adr/0001-adopt-progressive-trust-harness.md": "empty_array",
+    "docs/adr/0002-single-app-with-role-based-views.md": "empty_array",
+    "docs/adr/0003-defer-kpi-analytics-dashboard.md": "empty_array",
+    "docs/adr/0004-lib-layer-placement-rules.md": "empty_array",
+    "docs/adr/0005-client-side-auth-over-server-actions.md": "empty_array",
+    "docs/adr/0006-no-service-layer-validation-for-external-api.md": "empty_array",
+    "docs/adr/0007-no-ternary-in-dynamic-components.md": "empty_array",
+    "docs/adr/0008-conditional-render-for-shared-field-path.md": "empty_array",
+    "docs/adr/0008-server-action-result-chaining.md": "empty_array",
+    "docs/adr/0009-adopt-madr-based-template.md": "empty_array",
+    "docs/adr/0010-hidden-display-for-goods-list-detail-layout.md": "empty_array",
+    "docs/adr/0011-swr-revalidation-after-server-action.md": "empty_array",
+    "docs/adr/0012-swr-data-change-notification-for-form-sync.md": "empty_array",
+    "docs/adr/0013-goods-form-field-ownership-and-view-sync.md": "empty_array",
+    "docs/adr/0014-conform-migration-from-rhf-and-nsa.md": "empty_array",
+    "docs/adr/TEMPLATE.md": "empty_array",
+    "docs/purpose.md": "empty_array",
+    "lefthook.yml": "empty_array",
+    "next.config.ts": [
+      "string",
+    ],
+    "package.json": "empty_array",
+    "plugins/no-ternary-in-jsx.grit": "empty_array",
+    "pnpm-lock.yaml": "empty_array",
+    "pnpm-workspace.yaml": "empty_array",
+    "postcss.config.mjs": "empty_array",
+    "src/app/(store)/bas-case/[id]/_components/BasCaseDetailLayout.tsx": [
+      "string",
+    ],
+    "src/app/(store)/bas-case/[id]/_components/BasCaseProvider.tsx": [
+      "string",
+    ],
+    "src/app/(store)/bas-case/[id]/api/route.ts": [
+      "string",
+    ],
+    "src/app/(store)/bas-case/[id]/assessing/_actions/get-or-create-product.ts": [
+      "string",
+    ],
+    "src/app/(store)/bas-case/[id]/assessing/_actions/update-bas-case.ts": [
+      "string",
+    ],
+    "src/app/(store)/bas-case/[id]/assessing/_components/AssessingFormProvider.tsx": [
+      "string",
+    ],
+    "src/app/(store)/bas-case/[id]/assessing/_components/AssessingLayout.tsx": [
+      "string",
+    ],
+    "src/app/(store)/bas-case/[id]/assessing/_components/parts/GoodsFields.tsx": [
+      "string",
+    ],
+    "src/app/(store)/bas-case/[id]/assessing/_components/parts/IdentifyProductDialog.tsx": [
+      "string",
+    ],
+    "src/app/(store)/bas-case/[id]/assessing/_hooks/use-product-instructions.ts": [
+      "string",
+    ],
+    "src/app/(store)/bas-case/[id]/assessing/_schemas/get-or-create-product.ts": [
+      "string",
+    ],
+    "src/app/(store)/bas-case/[id]/assessing/_schemas/update-bas-case.ts": [
+      "string",
+    ],
+    "src/app/(store)/bas-case/[id]/identify-product/api/route.ts": [
+      "string",
+    ],
+    "src/app/(store)/bas-case/[id]/page.tsx": [
+      "string",
+    ],
+    "src/app/(store)/bas-case/_components/BasCaseList.tsx": [
+      "string",
+    ],
+    "src/app/(store)/bas-case/api/route.ts": [
+      "string",
+    ],
+    "src/app/(store)/bas-case/checkin/_actions/complete-checkin.ts": [
+      "string",
+    ],
+    "src/app/(store)/bas-case/checkin/_components/CheckinButton.tsx": [
+      "string",
+    ],
+    "src/app/(store)/bas-case/checkin/_components/CheckinFormDialog.tsx": [
+      "string",
+    ],
+    "src/app/(store)/bas-case/checkin/_schemas/complete-checkin.ts": [
+      "string",
+    ],
+    "src/app/(store)/bas-case/page.tsx": [
+      "string",
+    ],
+    "src/app/(store)/layout.tsx": "empty_array",
+    "src/app/(store)/page.tsx": [
+      "string",
+    ],
+    "src/app/_hooks/use-categories.ts": [
+      "string",
+    ],
+    "src/app/_hooks/use-products.ts": [
+      "string",
+    ],
+    "src/app/api/category/route.ts": [
+      "string",
+    ],
+    "src/app/api/product/route.ts": [
+      "string",
+    ],
+    "src/app/globals.css": "empty_array",
+    "src/app/layout.tsx": [
+      "string",
+    ],
+    "src/app/login/page.tsx": [
+      "string",
+    ],
+    "src/components/ui/button.tsx": [
+      "string",
+    ],
+    "src/components/ui/dialog.tsx": [
+      "string",
+    ],
+    "src/components/ui/input.tsx": [
+      "string",
+    ],
+    "src/components/ui/label.tsx": [
+      "string",
+    ],
+    "src/components/ui/select.tsx": [
+      "string",
+    ],
+    "src/components/ui/table.tsx": [
+      "string",
+    ],
+    "src/data/product-rules.json": "empty_array",
+    "src/features/auth/components/login-form.tsx": [
+      "string",
+    ],
+    "src/features/auth/components/logout-button.tsx": [
+      "string",
+    ],
+    "src/features/auth/schemas/login.ts": [
+      "string",
+    ],
+    "src/lib/auth/action.ts": [
+      "string",
+    ],
+    "src/lib/auth/context.ts": [
+      "string",
+    ],
+    "src/lib/auth/error.ts": "empty_array",
+    "src/lib/auth/route.ts": [
+      "string",
+    ],
+    "src/lib/env.ts": [
+      "string",
+    ],
+    "src/lib/supabase/client.ts": [
+      "string",
+    ],
+    "src/lib/supabase/proxy.ts": [
+      "string",
+    ],
+    "src/lib/supabase/server.ts": [
+      "string",
+    ],
+    "src/lib/utils.ts": [
+      "string",
+    ],
+    "src/proxy.ts": [
+      "string",
+    ],
+    "src/server/repositories/bas-case.ts": [
+      "string",
+    ],
+    "src/server/repositories/checkin.ts": [
+      "string",
+    ],
+    "src/server/repositories/product-attribute.ts": [
+      "string",
+    ],
+    "src/server/repositories/product-rule.ts": [
+      "string",
+    ],
+    "src/server/repositories/product.ts": [
+      "string",
+    ],
+    "src/server/services/bas-case.ts": [
+      "string",
+    ],
+    "src/server/services/checkin.ts": [
+      "string",
+    ],
+    "src/server/services/product-attribute.ts": [
+      "string",
+    ],
+    "src/server/services/product-rule.ts": [
+      "string",
+    ],
+    "src/server/services/product.ts": [
+      "string",
+    ],
+    "tsconfig.json": "empty_array",
+  },
+  "outlines": {
+    ".dependency-cruiser.cjs": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    ".git": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    ".gitignore": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    ".pi-lens/cache/jscpd.json": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    ".pi-lens/cache/jscpd.meta.json": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    ".pi-lens/cache/knip.json": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    ".pi-lens/cache/knip.meta.json": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    ".pi-lens/cache/todo-baseline.json": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    ".pi-lens/cache/todo-baseline.meta.json": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "AGENTS.md": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "README.md": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "biome.json": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "components.json": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "docs/adr/0000-adopt-adr.md": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "docs/adr/0001-adopt-progressive-trust-harness.md": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "docs/adr/0002-single-app-with-role-based-views.md": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "docs/adr/0003-defer-kpi-analytics-dashboard.md": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "docs/adr/0004-lib-layer-placement-rules.md": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "docs/adr/0005-client-side-auth-over-server-actions.md": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "docs/adr/0006-no-service-layer-validation-for-external-api.md": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "docs/adr/0007-no-ternary-in-dynamic-components.md": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "docs/adr/0008-conditional-render-for-shared-field-path.md": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "docs/adr/0008-server-action-result-chaining.md": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "docs/adr/0009-adopt-madr-based-template.md": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "docs/adr/0010-hidden-display-for-goods-list-detail-layout.md": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "docs/adr/0011-swr-revalidation-after-server-action.md": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "docs/adr/0012-swr-data-change-notification-for-form-sync.md": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "docs/adr/0013-goods-form-field-ownership-and-view-sync.md": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "docs/adr/0014-conform-migration-from-rhf-and-nsa.md": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "docs/adr/TEMPLATE.md": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "docs/purpose.md": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "lefthook.yml": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "next.config.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "package.json": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "plugins/no-ternary-in-jsx.grit": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "pnpm-lock.yaml": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "pnpm-workspace.yaml": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "postcss.config.mjs": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "src/app/(store)/bas-case/[id]/_components/BasCaseDetailLayout.tsx": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/(store)/bas-case/[id]/_components/BasCaseProvider.tsx": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/(store)/bas-case/[id]/api/route.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/(store)/bas-case/[id]/assessing/_actions/get-or-create-product.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/(store)/bas-case/[id]/assessing/_actions/update-bas-case.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/(store)/bas-case/[id]/assessing/_components/AssessingFormProvider.tsx": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/(store)/bas-case/[id]/assessing/_components/AssessingLayout.tsx": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/(store)/bas-case/[id]/assessing/_components/parts/GoodsFields.tsx": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/(store)/bas-case/[id]/assessing/_components/parts/IdentifyProductDialog.tsx": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/(store)/bas-case/[id]/assessing/_hooks/use-product-instructions.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/(store)/bas-case/[id]/assessing/_schemas/get-or-create-product.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/(store)/bas-case/[id]/assessing/_schemas/update-bas-case.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/(store)/bas-case/[id]/identify-product/api/route.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/(store)/bas-case/[id]/page.tsx": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/(store)/bas-case/_components/BasCaseList.tsx": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/(store)/bas-case/api/route.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/(store)/bas-case/checkin/_actions/complete-checkin.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/(store)/bas-case/checkin/_components/CheckinButton.tsx": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/(store)/bas-case/checkin/_components/CheckinFormDialog.tsx": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/(store)/bas-case/checkin/_schemas/complete-checkin.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/(store)/bas-case/page.tsx": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/(store)/layout.tsx": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "detail": "string",
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/(store)/page.tsx": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/_hooks/use-categories.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/_hooks/use-products.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/api/category/route.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/api/product/route.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/globals.css": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "src/app/layout.tsx": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/app/login/page.tsx": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/components/ui/button.tsx": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/components/ui/dialog.tsx": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/components/ui/input.tsx": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/components/ui/label.tsx": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/components/ui/select.tsx": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/components/ui/table.tsx": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/data/product-rules.json": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "src/features/auth/components/login-form.tsx": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/features/auth/components/logout-button.tsx": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/features/auth/schemas/login.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/lib/auth/action.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/lib/auth/context.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/lib/auth/error.ts": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+    "src/lib/auth/route.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/lib/env.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/lib/supabase/client.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/lib/supabase/proxy.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/lib/supabase/server.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/lib/utils.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/proxy.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/server/repositories/bas-case.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/server/repositories/checkin.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/server/repositories/product-attribute.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/server/repositories/product-rule.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/server/repositories/product.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/server/services/bas-case.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/server/services/checkin.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/server/services/product-attribute.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/server/services/product-rule.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "src/server/services/product.ts": {
+      "bytes": "number",
+      "imports": [
+        "string",
+      ],
+      "language": "string",
+      "lines": "number",
+      "symbols": [
+        {
+          "kind": "string",
+          "line_end": "number",
+          "line_start": "number",
+          "name": "string",
+        },
+      ],
+    },
+    "tsconfig.json": {
+      "bytes": "number",
+      "imports": "empty_array",
+      "language": "string",
+      "lines": "number",
+      "symbols": "empty_array",
+    },
+  },
+  "seq": "number",
+  "symbol_index": {
+    "ATTRIBUTE_PREFIX": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "AssessingFormProvider": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "AssessingLayout": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "BasCaseContext": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "BasCaseDetailLayout": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "BasCaseList": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "BasCaseProvider": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "Button": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "CheckinButton": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "CheckinFormDialog": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "Comp": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "Dialog": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "DialogClose": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "DialogContent": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "DialogDescription": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "DialogFooter": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "DialogHeader": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "DialogOverlay": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "DialogPortal": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "DialogTitle": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "DialogTrigger": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "GET": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "GoodsFields": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "IdentifyProductDialog": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "IdentifyProductForm": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "Input": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "InstructionField": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "InstructionSelect": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "Label": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "LoginForm": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "LogoutButton": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "PUT": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "RECORE_STORE_ID": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "Select": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "SelectContent": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "SelectGroup": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "SelectItem": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "SelectLabel": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "SelectScrollDownButton": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "SelectScrollUpButton": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "SelectSeparator": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "SelectTrigger": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "SelectValue": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "Table": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "TableBody": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "TableCaption": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "TableCell": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "TableFooter": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "TableHead": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "TableHeader": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "TableRow": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "_exhaustive": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "addGoods": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "attrDefault": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "attrPriorities": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "attribute": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "attributes": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "basCaseResponseSchema": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "body": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "buttonVariants": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "categories": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "category": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "categoryControl": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "categoryId": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "categoryResponseSchema": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "cn": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "completeCheckin": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "completeCheckinAction": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "completeCheckinSchema": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "cond": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "condition": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "conditionSchema": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "conditionValueSchema": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "config": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "control": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "cookieStore": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "createCheckin": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "createClient": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "createProduct": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "criteriaJson": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "ctx": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "data": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "default": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "defaultCondition": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "defaultValue": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "deleteGoods": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "dialogRef": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "editGoods": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "emailId": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "env": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "exactMatch": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "fetchBasCase": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "fetchList": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "fetcher": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "fieldset": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "firstId": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "for": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "formData": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "g": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "geistMono": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "geistSans": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "getAuthCtx": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "getBasCase": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "getOrCreateProduct": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "getOrCreateProductAction": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "getOrCreateProductFormSchema": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "getOrCreateProductInputSchema": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "getProductInstructions": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "getProductRules": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "goodsId": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "goodsList": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "goodsResponseSchema": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "handleComplete": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "handleDeleteGoods": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "handleLogout": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "handleSubmit": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "id": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "ids": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "idsParam": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import "./globals.css";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import "server-only";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import * as React from "react";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import Link from "next/link";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import productRulesData from "@/data/product-rules.json";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import type * as React from "react";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import type {": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import type { AttributeValue } from "@/server/services/product";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import type { AuthCtx } from "./context";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import type { BasCase } from "@/server/services/bas-case";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import type { Category } from "@/server/services/product";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import type { Checkin } from "@/server/services/checkin";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import type { Condition } from "@/server/services/product-rule";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import type { IdentifyProductDialogHandle } from "./IdentifyProductDialog";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import type { Metadata } from "next";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import type { NextConfig } from "next";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import type { NextRequest } from "next/server";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import type { Product } from "@/server/services/product";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import type { ProductRule } from "@/server/services/product-rule";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import type { RefObject } from "react";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import type { SubmissionResult } from "@conform-to/react/future";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import useSWR from "swr";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import {": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { AssessingFormProvider } from "./AssessingFormProvider";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { AssessingLayout } from "../assessing/_components/AssessingLayout";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { BasCaseDetailLayout } from "./_components/BasCaseDetailLayout";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { BasCaseList } from "./_components/BasCaseList";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { BasCaseProvider } from "./_components/BasCaseProvider";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { Button } from "@/components/ui/button";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { CheckinButton } from "../checkin/_components/CheckinButton";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { CheckinFormDialog } from "./CheckinFormDialog";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { Dialog as DialogPrimitive } from "radix-ui";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { FormProvider, useForm } from "@conform-to/react/future";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { Geist, Geist_Mono } from "next/font/google";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { GoodsFields } from "./parts/GoodsFields";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { Input } from "@/components/ui/input";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { Label as LabelPrimitive } from "radix-ui";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { Label } from "@/components/ui/label";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { LoginForm } from "@/features/auth/components/login-form";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { LogoutButton } from "@/features/auth/components/logout-button";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { NextResponse } from "next/server";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { Select as SelectPrimitive } from "radix-ui";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { Slot } from "radix-ui";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { UnauthenticatedError } from "./error";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { XIcon } from "lucide-react";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { cache } from "react";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { cn } from "@/lib/utils";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { coerceFormValue } from "@conform-to/zod/v4/future";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { completeCheckin } from "@/server/services/checkin";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { completeCheckinAction } from "../_actions/complete-checkin";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { completeCheckinSchema } from "../_schemas/complete-checkin";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { cookies } from "next/headers";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { createBrowserClient } from "@supabase/ssr";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { createCheckin } from "@/server/repositories/checkin";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { createClient } from "@/lib/supabase/client";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { createClient } from "@/lib/supabase/server";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { createContext, use, useCallback, useEffect, useState } from "react";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { createEnv } from "@t3-oss/env-nextjs";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { createServerClient } from "@supabase/ssr";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { cva, type VariantProps } from "class-variance-authority";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { env } from "@/lib/env";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { getAuthCtx } from "./context";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { getBasCase, updateBasCase } from "@/server/services/bas-case";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { getOrCreateProduct } from "@/server/services/product";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { getOrCreateProductAction } from "../../_actions/get-or-create-product";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { getOrCreateProductFormSchema } from "../../_schemas/get-or-create-product";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { getOrCreateProductFormSchema } from "../_schemas/get-or-create-product";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { getProductRules } from "@/server/repositories/product-rule";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { loginSchema } from "@/features/auth/schemas/login";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { parseSubmission, report } from "@conform-to/react/future";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { searchBasCases } from "@/server/services/bas-case";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { searchCategories } from "@/server/services/product";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { searchProductAttributes } from "@/server/repositories/product-attribute";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { searchProducts } from "@/server/services/product";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { twMerge } from "tailwind-merge";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { type AuthCtx, getAuthCtx } from "./context";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { type ClassValue, clsx } from "clsx";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { type NextRequest, NextResponse } from "next/server";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { updateBasCase } from "@/server/services/bas-case";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { updateBasCaseAction } from "../_actions/update-bas-case";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { updateBasCaseFormSchema } from "../_schemas/update-bas-case";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { updateSession } from "@/lib/supabase/proxy";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { useActionState, useEffect, useEffectEvent } from "react";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { useActionState, useEffect, useRef } from "react";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { useBasCaseContext } from "../../../_components/BasCaseProvider";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { useBasCaseContext } from "../../_components/BasCaseProvider";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { useBasCaseContext } from "./BasCaseProvider";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { useCallback, useEffect, useState } from "react";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { useCategories } from "@/app/_hooks/use-categories";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { useId, useState, useTransition } from "react";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { useParams } from "next/navigation";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { useProducts } from "@/app/_hooks/use-products";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { useRef } from "react";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { useRouter } from "next/navigation";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { useState } from "react";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { useTransition } from "react";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { withAuth } from "@/lib/auth/action";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { withAuth } from "@/lib/auth/route";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "import { z } from "zod/v4";": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "inputType": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "instructions": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "intent": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "json": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "key": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "loginSchema": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "matched": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "mergedAttr": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "mergedCategoryId": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "metadata": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "name": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "nextConfig": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "nextCursor": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "onCheckinCompleteRef": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "onCompleteRef": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "params": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "paramsRef": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "parseCondition": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "passwordId": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "product": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "productAttributeResponseSchema": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "productIds": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "productInstructionTypeSchema": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "productResponseSchema": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "productRuleSchema": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "products": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "proxy": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "raw": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "rawCategoryId": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "remaining": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "requestBodySchema": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "res": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "resolvedDefault": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "result": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "router": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "rules": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "searchBasCases": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "searchCategories": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "searchParams": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "searchProductAttributes": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "searchProducts": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "seen": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "sortedAttrKeys": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "steps": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "submission": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "supabase": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "syncFormValues": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "titleParts": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "toBasCase": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "toBasCaseGoods": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "toCategory": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "toCategorySearchQueryRecord": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "toCondition": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "toCreateRequestBody": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "toInstructionUrl": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "toProduct": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "toProductAttribute": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "toProductSearchQueryRecord": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "toQueryRecord": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "toRequestBody": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "toUpdateRequestBody": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "totalCount": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "tree": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "updateBasCase": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "updateBasCaseAction": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "updateBasCaseFormSchema": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "updateBasCaseInputSchema": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "updateGoodsSchema": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "updateSession": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "url": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "useBasCaseContext": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "useCategories": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "useProductInstructions": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "useProducts": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "user": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+    "withAuth": [
+      {
+        "kind": "string",
+        "line": "number",
+        "path": "string",
+      },
+    ],
+  },
+  "tree": "string",
 }
 `;
 
@@ -87,5 +3602,21 @@ exports[`codedb API contract (snapshot) > word response shape 1`] = `
     },
   ],
   "query": "string",
+}
+`;
+
+exports[`codedb REST parameter parity matrix > parameter support status 1`] = `
+{
+  "changes:since": "effective",
+  "hot:limit": "ignored",
+  "outline:compact": "ignored",
+  "read:compact": "ignored",
+  "read:if_hash": "ignored",
+  "read:start+end": "ignored",
+  "search:compact": "ignored",
+  "search:max": "ignored",
+  "search:regex": "ignored",
+  "search:scope": "ignored",
+  "symbol:body": "ignored",
 }
 `;
