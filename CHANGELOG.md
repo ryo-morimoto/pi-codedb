@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.0](https://github.com/ryo-morimoto/pi-codedb/compare/pi-codedb-v1.1.0...pi-codedb-v1.2.0) (2026-04-07)
+
+### Features
+
+- migrate from HTTP serve to MCP stdio transport ([6ccd57f](https://github.com/ryo-morimoto/pi-codedb/commit/6ccd57f20d133cd6b5e87cfd3117b8ba33d76fce))
+
 ## [1.1.0](https://github.com/ryo-morimoto/pi-codedb/compare/pi-codedb-v1.0.5...pi-codedb-v1.1.0) (2026-04-07)
 
 ### Features
