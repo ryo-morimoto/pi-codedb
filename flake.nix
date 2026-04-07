@@ -31,6 +31,32 @@
       };
     in
     {
+      devShells = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          default = pkgs.mkShell {
+            packages = [
+              pkgs.nodejs_22
+              pkgs.pnpm
+              pkgs.typescript
+              self.packages.${system}.codedb
+            ];
+
+            shellHook = ''
+              echo "pi-codedb dev shell"
+              echo "  node: $(node --version)"
+              echo "  pnpm: $(pnpm --version)"
+              echo "  codedb: $(codedb --version)"
+              echo ""
+              echo "Run 'pnpm install' to install dependencies."
+            '';
+          };
+        }
+      );
+
       packages = forAllSystems (
         system:
         let
@@ -84,7 +110,7 @@
             '';
 
             meta = with pkgs.lib; {
-              description = "Code intelligence extension for pi-coding-agent via codedb REST API";
+              description = "Code intelligence extension for pi-coding-agent via codedb MCP";
               homepage = "https://github.com/ryo-morimoto/pi-codedb";
               license = licenses.mit;
               platforms = platforms.all;
