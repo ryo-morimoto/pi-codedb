@@ -1,29 +1,25 @@
 /**
  * pi-codedb — Pi Extension
  *
- * Code intelligence via codedb REST API.
+ * Code intelligence via codedb MCP (JSON-RPC over stdio).
  *
- * Design: Cloudflare Dynamic Workers pattern
- * - TypeScript interfaces as compact API surface (token-efficient for LLM context)
- * - Capability-based: agent receives typed env bindings, not raw HTTP endpoints
- * - Context embedding: project path & server URL flow through typed CodeDB interface
- * - Project-scoped: all queries include project path to avoid cross-project contamination
+ * Design: Long-lived codedb child process communicating via newline-delimited
+ * JSON-RPC 2.0 over stdin/stdout. No port, no HTTP — zero network overhead.
  *
- * Only parameters verified via e2e tests (contract.test.ts) are exposed.
- * See the parameter parity matrix snapshot for current REST API support status.
+ * Multi-project: codedb MCP mode has a built-in ProjectCache (up to 5 projects).
+ * When the agent switches directories, we pass `project` in tool arguments —
+ * no server restart needed.
  */
 
+import { type ChildProcess, spawn } from "node:child_process";
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { truncateTail, DEFAULT_MAX_BYTES, DEFAULT_MAX_LINES } from "@mariozechner/pi-coding-agent";
+import { DEFAULT_MAX_BYTES, DEFAULT_MAX_LINES, truncateTail } from "@mariozechner/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
-import { spawn, type ChildProcess } from "node:child_process";
 
 // ---------------------------------------------------------------------------
 // Config
 // ---------------------------------------------------------------------------
-const CODEDB_BASE = "http://localhost:7719";
-const STARTUP_TIMEOUT_MS = 10_000;
-const HEALTH_POLL_MS = 300;
+const STARTUP_TIMEOUT_MS = 15_000;
 
 // ---------------------------------------------------------------------------
 // Module state — project path scoped per session
@@ -93,79 +89,197 @@ interface Change { path: string; seq: number; op: string; size: number; timestam
 // Helper: wrap a string as AgentToolResult with timing metadata
 // ---------------------------------------------------------------------------
 
-function textResult(text: string, durationMs: number, endpoint: string) {
+function textResult(text: string, durationMs: number, tool: string) {
   return {
     content: [{ type: "text" as const, text }],
-    details: { durationMs, endpoint },
+    details: { durationMs, tool },
   };
 }
 
 // ---------------------------------------------------------------------------
-// HTTP client — thin fetch wrapper for codedb REST API
+// MCP Client — JSON-RPC 2.0 over stdio
 // ---------------------------------------------------------------------------
 
-async function codedbFetch(path: string, timeout = 10_000): Promise<string> {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeout);
-  try {
-    const separator = path.includes("?") ? "&" : "?";
-    const url =
-      currentProjectPath && !path.startsWith("/health")
-        ? `${CODEDB_BASE}${path}${separator}project=${encodeURIComponent(currentProjectPath)}`
-        : `${CODEDB_BASE}${path}`;
-    const res = await fetch(url, { signal: controller.signal });
-    if (!res.ok) {
-      const body = await res.text();
-      throw new Error(`codedb ${res.status}: ${body}`);
-    }
-    return await res.text();
-  } finally {
-    clearTimeout(timer);
+let mcpProcess: ChildProcess | null = null;
+let mcpReady = false;
+let rpcIdCounter = 0;
+const pendingRequests = new Map<
+  number,
+  {
+    resolve: (value: unknown) => void;
+    reject: (reason: Error) => void;
   }
+>();
+let lineBuffer = "";
+
+function startMcpProcess(projectPath: string): ChildProcess {
+  const codedbBin = process.env.CODEDB_PATH || "codedb";
+  const child = spawn(codedbBin, [projectPath, "mcp", "--no-telemetry"], {
+    stdio: ["pipe", "pipe", "ignore"],
+    env: { ...process.env, CODEDB_NO_TELEMETRY: "1" },
+  });
+
+  child.stdout!.setEncoding("utf-8");
+  child.stdout!.on("data", (chunk: string) => {
+    lineBuffer += chunk;
+    let newlineIdx: number;
+    while ((newlineIdx = lineBuffer.indexOf("\n")) !== -1) {
+      const line = lineBuffer.slice(0, newlineIdx).trim();
+      lineBuffer = lineBuffer.slice(newlineIdx + 1);
+      if (!line) continue;
+      try {
+        const msg = JSON.parse(line);
+        if (msg.id != null && pendingRequests.has(msg.id)) {
+          const pending = pendingRequests.get(msg.id)!;
+          pendingRequests.delete(msg.id);
+          if (msg.error) {
+            pending.reject(new Error(`codedb RPC error ${msg.error.code}: ${msg.error.message}`));
+          } else {
+            pending.resolve(msg.result);
+          }
+        }
+      } catch {
+        // ignore malformed lines (e.g. log output)
+      }
+    }
+  });
+
+  child.on("exit", () => {
+    mcpProcess = null;
+    mcpReady = false;
+    // Reject all pending requests
+    for (const [id, pending] of pendingRequests) {
+      pending.reject(new Error("codedb process exited"));
+      pendingRequests.delete(id);
+    }
+  });
+
+  return child;
 }
 
-async function codedbGet(path: string): Promise<unknown> {
-  return JSON.parse(await codedbFetch(path));
+function sendRpc(method: string, params?: Record<string, unknown>): Promise<unknown> {
+  if (!mcpProcess || !mcpProcess.stdin?.writable) {
+    return Promise.reject(new Error("codedb MCP process not running"));
+  }
+  const id = ++rpcIdCounter;
+  const msg: Record<string, unknown> = {
+    jsonrpc: "2.0",
+    method,
+    id,
+  };
+  if (params) msg.params = params;
+  const line = JSON.stringify(msg) + "\n";
+
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      pendingRequests.delete(id);
+      reject(new Error(`codedb RPC timeout: ${method}`));
+    }, 30_000);
+
+    pendingRequests.set(id, {
+      resolve: (value) => {
+        clearTimeout(timer);
+        resolve(value);
+      },
+      reject: (err) => {
+        clearTimeout(timer);
+        reject(err);
+      },
+    });
+
+    mcpProcess!.stdin!.write(line);
+  });
+}
+
+function sendNotification(method: string, params?: Record<string, unknown>): void {
+  if (!mcpProcess || !mcpProcess.stdin?.writable) return;
+  const msg: Record<string, unknown> = { jsonrpc: "2.0", method };
+  if (params) msg.params = params;
+  mcpProcess.stdin.write(JSON.stringify(msg) + "\n");
+}
+
+/** Call a codedb MCP tool and return the text content from the result. */
+async function mcpToolCall(toolName: string, args: Record<string, unknown> = {}): Promise<string> {
+  const result = (await sendRpc("tools/call", {
+    name: toolName,
+    arguments: args,
+  })) as { content?: Array<{ type: string; text: string }> };
+
+  if (!result?.content?.length) return "{}";
+
+  // codedb MCP returns up to 3 text blocks:
+  //   Block 0: ANSI status line (e.g. "✓ tree  40 files  ⚡ 22µs")
+  //   Block 1: actual data
+  //   Block 2: hint (e.g. "→ next: codedb_outline path=<file>")
+  // We want Block 1 (the data). For 1-block responses (e.g. status), return that.
+  const textBlocks = result.content.filter((c) => c.type === "text");
+  if (textBlocks.length === 0) return "{}";
+  if (textBlocks.length === 1) return textBlocks[0].text;
+  // 2+ blocks: return the second one (index 1 = data block)
+  return textBlocks[1].text;
 }
 
 // ---------------------------------------------------------------------------
 // Server lifecycle
 // ---------------------------------------------------------------------------
 
-let serverProcess: ChildProcess | null = null;
-
 async function ensureServer(projectPath: string): Promise<boolean> {
+  if (mcpProcess && mcpReady) {
+    // Already running — codedb MCP handles multi-project via `project` arg
+    return true;
+  }
+
+  // Kill any stale process
+  stopServer();
+
+  mcpProcess = startMcpProcess(projectPath);
+
+  // Initialize MCP handshake
   try {
-    await codedbFetch("/health", 2000);
+    await sendRpc("initialize", {
+      protocolVersion: "2025-06-18",
+      capabilities: {},
+      clientInfo: { name: "pi-codedb", version: "1.0.0" },
+    });
+    sendNotification("notifications/initialized");
+    mcpReady = true;
+
+    // Wait for initial indexing — poll codedb_status until seq > 0
+    const deadline = Date.now() + STARTUP_TIMEOUT_MS;
+    while (Date.now() < deadline) {
+      try {
+        const statusText = await mcpToolCall("codedb_status", {});
+        const status = JSON.parse(statusText);
+        if (status?.seq > 0 || status?.status === "ok") {
+          return true;
+        }
+      } catch {
+        // not ready yet
+      }
+      await new Promise((r) => setTimeout(r, 300));
+    }
+    // Timeout but process is alive — may still be indexing, allow usage
     return true;
   } catch {
-    // Not running, start one
+    stopServer();
+    return false;
   }
-
-  const codedbBin = process.env.CODEDB_PATH || "codedb";
-  serverProcess = spawn(codedbBin, ["serve", projectPath], {
-    stdio: "ignore",
-    detached: true,
-    env: { ...process.env, CODEDB_NO_TELEMETRY: "1" },
-  });
-  serverProcess.unref();
-
-  const deadline = Date.now() + STARTUP_TIMEOUT_MS;
-  while (Date.now() < deadline) {
-    try {
-      await codedbFetch("/health", 2000);
-      return true;
-    } catch {
-      await new Promise((r) => setTimeout(r, HEALTH_POLL_MS));
-    }
-  }
-  return false;
 }
 
 function stopServer() {
-  if (serverProcess && !serverProcess.killed) {
-    serverProcess.kill("SIGTERM");
-    serverProcess = null;
+  if (mcpProcess) {
+    try {
+      mcpProcess.kill("SIGTERM");
+    } catch {
+      // already dead
+    }
+    mcpProcess = null;
+  }
+  mcpReady = false;
+  lineBuffer = "";
+  for (const [id, pending] of pendingRequests) {
+    pending.reject(new Error("codedb server stopped"));
+    pendingRequests.delete(id);
   }
 }
 
@@ -203,16 +317,19 @@ export default function (pi: ExtensionAPI) {
 
   pi.on("before_agent_start", async (event, ctx) => {
     const projectPath = ctx.cwd || process.cwd();
-    if (projectPath !== currentProjectPath) {
-      currentProjectPath = projectPath;
-      serverReady = await ensureServer(projectPath);
-    }
-    if (warmupPromise) {
-      serverReady = await warmupPromise;
+    currentProjectPath = projectPath;
+    if (!serverReady) {
+      if (warmupPromise) {
+        serverReady = await warmupPromise;
+      } else {
+        serverReady = await ensureServer(projectPath);
+      }
     }
     if (serverReady) {
       ctx.ui.setStatus("codedb", `codedb: ready (${projectPath.split("/").pop()})`);
-      return { systemPrompt: event.systemPrompt + "\n\n" + CODEDB_SYSTEM_PROMPT };
+      return {
+        systemPrompt: event.systemPrompt + "\n\n" + CODEDB_SYSTEM_PROMPT,
+      };
     }
     ctx.ui.setStatus("codedb", "codedb: offline");
     return undefined;
@@ -239,15 +356,14 @@ export default function (pi: ExtensionAPI) {
 
       const ok = await ensureServer(projectPath);
       if (ok) {
-        const [health, seq] = await Promise.all([
-          codedbFetch("/health").catch(() => '{"status":"error"}'),
-          codedbFetch("/seq").catch(() => '{"seq":-1}'),
-        ]);
+        const statusText = await mcpToolCall("codedb_status", {
+          project: projectPath,
+        }).catch(() => '{"status":"error"}');
         ctx.ui.setStatus("codedb", `codedb: ready (${projectPath.split("/").pop()})`);
         pi.sendMessage(
           {
             customType: "codedb-status",
-            content: `CodeDB status: ${health}\nSequence: ${seq}\nProject: ${projectPath}`,
+            content: `CodeDB status: ${statusText}\nProject: ${projectPath}`,
             display: true,
             details: undefined,
           },
@@ -269,6 +385,15 @@ export default function (pi: ExtensionAPI) {
     getArgumentCompletions: () => [],
   });
 
+  // ── Helper: build args with optional project scope ──
+
+  function withProject(args: Record<string, unknown>): Record<string, unknown> {
+    if (currentProjectPath) {
+      return { ...args, project: currentProjectPath };
+    }
+    return args;
+  }
+
   // ── Tools ──
 
   pi.registerTool({
@@ -283,12 +408,12 @@ export default function (pi: ExtensionAPI) {
     parameters: Type.Object({}),
     execute: async () => {
       const start = Date.now();
-      const data = (await codedbGet("/explore/tree")) as { tree: string };
-      const result = truncateTail(data.tree, {
+      const text = await mcpToolCall("codedb_tree", withProject({}));
+      const result = truncateTail(text, {
         maxLines: DEFAULT_MAX_LINES,
         maxBytes: DEFAULT_MAX_BYTES,
       });
-      return textResult(result.content, Date.now() - start, "/explore/tree");
+      return textResult(result.content, Date.now() - start, "codedb_tree");
     },
   });
 
@@ -304,8 +429,8 @@ export default function (pi: ExtensionAPI) {
     }),
     execute: async (_toolCallId, params) => {
       const start = Date.now();
-      const data = await codedbGet(`/explore/outline?path=${encodeURIComponent(params.path)}`);
-      return textResult(JSON.stringify(data, null, 2), Date.now() - start, "/explore/outline");
+      const text = await mcpToolCall("codedb_outline", withProject({ path: params.path }));
+      return textResult(text, Date.now() - start, "codedb_outline");
     },
   });
 
@@ -320,8 +445,8 @@ export default function (pi: ExtensionAPI) {
     }),
     execute: async (_toolCallId, params) => {
       const start = Date.now();
-      const data = await codedbGet(`/explore/symbol?name=${encodeURIComponent(params.name)}`);
-      return textResult(JSON.stringify(data, null, 2), Date.now() - start, "/explore/symbol");
+      const text = await mcpToolCall("codedb_symbol", withProject({ name: params.name }));
+      return textResult(text, Date.now() - start, "codedb_symbol");
     },
   });
 
@@ -337,8 +462,8 @@ export default function (pi: ExtensionAPI) {
     }),
     execute: async (_toolCallId, params) => {
       const start = Date.now();
-      const data = await codedbGet(`/explore/search?q=${encodeURIComponent(params.query)}`);
-      return textResult(JSON.stringify(data, null, 2), Date.now() - start, "/explore/search");
+      const text = await mcpToolCall("codedb_search", withProject({ query: params.query }));
+      return textResult(text, Date.now() - start, "codedb_search");
     },
   });
 
@@ -356,8 +481,8 @@ export default function (pi: ExtensionAPI) {
     }),
     execute: async (_toolCallId, params) => {
       const start = Date.now();
-      const data = await codedbGet(`/explore/word?q=${encodeURIComponent(params.word)}`);
-      return textResult(JSON.stringify(data, null, 2), Date.now() - start, "/explore/word");
+      const text = await mcpToolCall("codedb_word", withProject({ word: params.word }));
+      return textResult(text, Date.now() - start, "codedb_word");
     },
   });
 
@@ -370,8 +495,8 @@ export default function (pi: ExtensionAPI) {
     parameters: Type.Object({}),
     execute: async () => {
       const start = Date.now();
-      const data = await codedbGet("/explore/hot");
-      return textResult(JSON.stringify(data, null, 2), Date.now() - start, "/explore/hot");
+      const text = await mcpToolCall("codedb_hot", withProject({}));
+      return textResult(text, Date.now() - start, "codedb_hot");
     },
   });
 
@@ -389,8 +514,8 @@ export default function (pi: ExtensionAPI) {
     }),
     execute: async (_toolCallId, params) => {
       const start = Date.now();
-      const data = await codedbGet(`/explore/deps?path=${encodeURIComponent(params.path)}`);
-      return textResult(JSON.stringify(data, null, 2), Date.now() - start, "/explore/deps");
+      const text = await mcpToolCall("codedb_deps", withProject({ path: params.path }));
+      return textResult(text, Date.now() - start, "codedb_deps");
     },
   });
 
@@ -408,8 +533,8 @@ export default function (pi: ExtensionAPI) {
     }),
     execute: async (_toolCallId, params) => {
       const start = Date.now();
-      const data = await codedbGet(`/file/read?path=${encodeURIComponent(params.path)}`);
-      return textResult(JSON.stringify(data, null, 2), Date.now() - start, "/file/read");
+      const text = await mcpToolCall("codedb_read", withProject({ path: params.path }));
+      return textResult(text, Date.now() - start, "codedb_read");
     },
   });
 
@@ -421,15 +546,8 @@ export default function (pi: ExtensionAPI) {
     parameters: Type.Object({}),
     execute: async () => {
       const start = Date.now();
-      const [health, seq] = await Promise.all([
-        codedbFetch("/health").catch(() => '{"status":"error"}'),
-        codedbFetch("/seq").catch(() => '{"seq":-1}'),
-      ]);
-      return textResult(
-        JSON.stringify({ health: JSON.parse(health), seq: JSON.parse(seq) }, null, 2),
-        Date.now() - start,
-        "/health+/seq",
-      );
+      const text = await mcpToolCall("codedb_status", withProject({}));
+      return textResult(text, Date.now() - start, "codedb_status");
     },
   });
 
@@ -441,14 +559,17 @@ export default function (pi: ExtensionAPI) {
     promptSnippet: "codedb_changes [since] — files changed since sequence number",
     parameters: Type.Object({
       since: Type.Optional(
-        Type.Number({ description: "Sequence number to get changes since (default: 0)" }),
+        Type.Number({
+          description: "Sequence number to get changes since (default: 0)",
+        }),
       ),
     }),
     execute: async (_toolCallId, params) => {
       const start = Date.now();
-      const q = params.since != null ? `?since=${params.since}` : "";
-      const data = await codedbGet(`/changes${q}`);
-      return textResult(JSON.stringify(data, null, 2), Date.now() - start, "/changes");
+      const args: Record<string, unknown> = {};
+      if (params.since != null) args.since = params.since;
+      const text = await mcpToolCall("codedb_changes", withProject(args));
+      return textResult(text, Date.now() - start, "codedb_changes");
     },
   });
 
@@ -464,13 +585,12 @@ export default function (pi: ExtensionAPI) {
     parameters: Type.Object({}),
     execute: async () => {
       const start = Date.now();
-      const data = await codedbGet("/snapshot");
-      const text = JSON.stringify(data, null, 2);
+      const text = await mcpToolCall("codedb_snapshot", withProject({}));
       const result = truncateTail(text, {
         maxLines: DEFAULT_MAX_LINES,
         maxBytes: DEFAULT_MAX_BYTES,
       });
-      return textResult(result.content, Date.now() - start, "/snapshot");
+      return textResult(result.content, Date.now() - start, "codedb_snapshot");
     },
   });
 }
