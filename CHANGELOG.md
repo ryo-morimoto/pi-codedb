@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.2](https://github.com/ryo-morimoto/pi-codedb/compare/pi-codedb-v1.3.1...pi-codedb-v1.3.2) (2026-04-08)
+
+
+### Bug Fixes
+
+* robust process lifecycle management for idle codedb crashes ([192d7ad](https://github.com/ryo-morimoto/pi-codedb/commit/192d7ad167939bf7590d19baffb6c0616aa2bc00))
+
 ## [1.3.1](https://github.com/ryo-morimoto/pi-codedb/compare/pi-codedb-v1.3.0...pi-codedb-v1.3.1) (2026-04-07)
 
 
