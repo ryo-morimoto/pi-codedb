@@ -108,6 +108,16 @@ const pendingRequests = new Map<
 >();
 let lineBuffer = "";
 
+/** Mark the process as dead and reject all pending requests. */
+function markProcessDead(reason: string) {
+  mcpProcess = null;
+  mcpReady = false;
+  for (const [id, pending] of pendingRequests) {
+    pending.reject(new Error(reason));
+    pendingRequests.delete(id);
+  }
+}
+
 function startMcpProcess(projectPath: string): ChildProcess {
   const codedbBin = process.env.CODEDB_PATH || "codedb";
   const child = spawn(codedbBin, [projectPath, "mcp", "--no-telemetry"], {
@@ -140,21 +150,23 @@ function startMcpProcess(projectPath: string): ChildProcess {
     }
   });
 
+  // Detect broken stdin early — fires before 'exit' in many cases
+  child.stdin!.on("error", () => {
+    markProcessDead("codedb stdin error");
+  });
+
   child.on("exit", () => {
-    mcpProcess = null;
-    mcpReady = false;
-    // Reject all pending requests
-    for (const [id, pending] of pendingRequests) {
-      pending.reject(new Error("codedb process exited"));
-      pendingRequests.delete(id);
-    }
+    markProcessDead("codedb process exited");
   });
 
   return child;
 }
 
 function sendRpc(method: string, params?: Record<string, unknown>): Promise<unknown> {
-  if (!mcpProcess || !mcpProcess.stdin?.writable) {
+  if (!mcpProcess || mcpProcess.exitCode !== null || !mcpProcess.stdin?.writable) {
+    // Synchronously detect dead process before the async 'exit' event fires
+    mcpProcess = null;
+    mcpReady = false;
     return Promise.reject(new Error("codedb MCP process not running"));
   }
   const id = ++rpcIdCounter;
@@ -194,31 +206,53 @@ function sendNotification(method: string, params?: Record<string, unknown>): voi
   mcpProcess.stdin.write(JSON.stringify(msg) + "\n");
 }
 
+/** Errors that indicate the codedb process died and a retry may succeed. */
+const RETRYABLE_ERRORS = ["process exited", "not running", "server stopped", "stdin error"];
+
+function isRetryable(err: unknown): boolean {
+  return err instanceof Error && RETRYABLE_ERRORS.some((msg) => err.message.includes(msg));
+}
+
 /** Call a codedb MCP tool and return the text content from the result. */
 async function mcpToolCall(toolName: string, args: Record<string, unknown> = {}): Promise<string> {
-  // Auto-reconnect on crash
-  if (!mcpProcess || !mcpReady) {
-    const ok = await ensureServer(mcpProjectPath || currentProjectPath);
-    if (!ok) throw new Error("codedb MCP not available");
+  for (let attempt = 0; attempt < 2; attempt++) {
+    // Auto-reconnect if the process is down
+    if (!mcpProcess || !mcpReady) {
+      const ok = await ensureServer(mcpProjectPath || currentProjectPath);
+      if (!ok) throw new Error("codedb MCP not available");
+    }
+
+    try {
+      const result = (await sendRpc("tools/call", {
+        name: toolName,
+        arguments: args,
+      })) as { content?: Array<{ type: string; text: string }> };
+
+      if (!result?.content?.length) return "{}";
+
+      // codedb MCP returns up to 3 text blocks:
+      //   Block 0: ANSI status line (e.g. "✓ tree  40 files  ⚡ 22µs")
+      //   Block 1: actual data
+      //   Block 2: hint (e.g. "→ next: codedb_outline path=<file>")
+      // We want Block 1 (the data). For 1-block responses (e.g. status), return that.
+      const textBlocks = result.content.filter((c) => c.type === "text");
+      if (textBlocks.length === 0) return "{}";
+      if (textBlocks.length === 1) return textBlocks[0].text;
+      // 2+ blocks: return the second one (index 1 = data block)
+      return textBlocks[1].text;
+    } catch (err) {
+      // On first attempt, retry if the process died mid-call (race between
+      // exit event and tool call). Reset state so ensureServer re-spawns.
+      if (attempt === 0 && isRetryable(err)) {
+        mcpProcess = null;
+        mcpReady = false;
+        continue;
+      }
+      throw err;
+    }
   }
-
-  const result = (await sendRpc("tools/call", {
-    name: toolName,
-    arguments: args,
-  })) as { content?: Array<{ type: string; text: string }> };
-
-  if (!result?.content?.length) return "{}";
-
-  // codedb MCP returns up to 3 text blocks:
-  //   Block 0: ANSI status line (e.g. "✓ tree  40 files  ⚡ 22µs")
-  //   Block 1: actual data
-  //   Block 2: hint (e.g. "→ next: codedb_outline path=<file>")
-  // We want Block 1 (the data). For 1-block responses (e.g. status), return that.
-  const textBlocks = result.content.filter((c) => c.type === "text");
-  if (textBlocks.length === 0) return "{}";
-  if (textBlocks.length === 1) return textBlocks[0].text;
-  // 2+ blocks: return the second one (index 1 = data block)
-  return textBlocks[1].text;
+  // Unreachable, but satisfies TypeScript
+  throw new Error("codedb MCP not available");
 }
 
 // ---------------------------------------------------------------------------
@@ -255,19 +289,15 @@ async function ensureServer(projectPath: string): Promise<boolean> {
 }
 
 function stopServer() {
-  if (mcpProcess) {
+  const proc = mcpProcess;
+  markProcessDead("codedb server stopped");
+  lineBuffer = "";
+  if (proc) {
     try {
-      mcpProcess.kill("SIGTERM");
+      proc.kill("SIGTERM");
     } catch {
       // already dead
     }
-    mcpProcess = null;
-  }
-  mcpReady = false;
-  lineBuffer = "";
-  for (const [id, pending] of pendingRequests) {
-    pending.reject(new Error("codedb server stopped"));
-    pendingRequests.delete(id);
   }
 }
 
